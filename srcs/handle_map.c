@@ -6,51 +6,36 @@
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 00:36:12 by akhellad          #+#    #+#             */
-/*   Updated: 2023/08/29 16:56:49 by akhellad         ###   ########.fr       */
+/*   Updated: 2023/08/30 14:36:54 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Cub3D.h"
 
-void	get_map_length(int fd, char *map_file, t_mlx_infos *infos)
+int	handle_map(t_mlx_infos *infos, int fd)
 {
-	char	*line;
+	int			i;
+	static int	k = 0;
+	char		*line;
 
 	line = get_next_line(fd);
-	while (line != NULL && line_cotains_only_spaces(line) == 1)
-	{
-		free(line);
-		line = get_next_line(fd);
-	}
+	while (k++ != infos->reading_pos)
+		line = get_line(fd, line);
+	infos->raw_map = malloc(sizeof(char *) * (infos->map_length + 1));
+	if (infos->raw_map == NULL)
+		return (printf("%s", MALLOC_FAIL), 1);
+	i = 0;
+	line = get_line(fd, line);
 	while (line != NULL)
 	{
-		infos->map_length++;
-		free(line);
-		line = get_next_line(fd);
-	}
-	close(fd);
-	fd = open(map_file, O_RDONLY);
-	if (fd == -1)
-	{
-		printf("%s", CANNOT_OPEN);
-		exit(0);
-	}
-}
-
-int	line_cotains_only_spaces(char *line)
-{
-	int	i;
-
-	i = 0;
-	while (line[i] != '\n')
-	{
-		if (line[i] == ' ' || line[i] == '\t' || line[i] == '\v'
-			|| line[i] == '\r' || line[i] == '\f')
-			i++;
-		else
+		if (line_has_invalid_chars(line) == 1)
 			return (0);
+		infos->raw_map[i++] = copy_map_line(line);
+		line = get_line(fd, line);
 	}
-	return (1);
+	if (check_maps(infos, i) == 0)
+		return (0);
+	return (close(fd), 1);
 }
 
 int	line_has_invalid_chars(char *line)
@@ -143,30 +128,4 @@ char	*copy_map_line(char *content)
 		line[i] = content[i];
 	line[i] = '\0';
 	return (line);
-}
-
-int	handle_map(t_mlx_infos *infos, int fd)
-{
-	int			i;
-	static int	k = 0;
-	char		*line;
-
-	line = get_next_line(fd);
-	while (k++ != infos->reading_pos)
-		line = get_line(fd, line);
-	infos->raw_map = malloc(sizeof(char *) * (infos->map_length + 1));
-	if (infos->raw_map == NULL)
-		return (printf("%s", MALLOC_FAIL), 1);
-	i = 0;
-	line = get_line(fd, line);
-	while (line != NULL)
-	{
-		if (line_has_invalid_chars(line) == 1)
-			return (0);
-		infos->raw_map[i++] = copy_map_line(line);
-		line = get_line(fd, line);
-	}
-	if (check_maps(infos, i) == 0)
-		return (0);
-	return (close(fd), 1);
 }

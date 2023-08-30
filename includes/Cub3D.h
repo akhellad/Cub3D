@@ -5,24 +5,23 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/28 20:10:04 by akhellad          #+#    #+#             */
-/*   Updated: 2023/08/30 00:15:16 by akhellad         ###   ########.fr       */
+/*   Created: 2023/08/30 15:08:40 by akhellad          #+#    #+#             */
+/*   Updated: 2023/08/30 15:23:30 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
-#include <unistd.h>
+# include <unistd.h>
 # include <fcntl.h>
 # include <math.h>
 # include <stdio.h>
+/*ne passe pas la norme*/
 # include <float.h>
 # include <stdbool.h>
 # include <stdint.h>
-# include <math.h>
-
-#include "../libft/includes/libft.h"
+# include "../libft/includes/libft.h"
 # include "../mlx/mlx.h"
 
 # define MALLOC_FAIL "Error! Malloc failed.\n"
@@ -48,7 +47,7 @@
 # define R 20
 # define WIDTH 1080
 # define HEIGHT 720
-# define MINIMAP_SIZE 260
+# define MINIMAP_SIZE 150
 
 typedef struct s_img
 {
@@ -59,13 +58,12 @@ typedef struct s_img
 	int		endian;
 }		t_img;
 
-typedef struct mlx_texture
+typedef struct s_mlx_texture
 {
-    t_img *img_ptr;
-    int width;
-    int height;
-}	mlx_texture_t;
-
+	t_img	*img_ptr;
+	int		width;
+	int		height;
+}	t_mlx_texture;
 
 typedef struct s_vector
 {
@@ -100,11 +98,11 @@ typedef struct s_mlx_infos
 	char			*we;
 	char			*ea;
 	int				error;
-	mlx_texture_t	*t_no;
-	mlx_texture_t	*t_so;
-	mlx_texture_t	*t_we;
-	mlx_texture_t	*t_ea;
-	mlx_texture_t	*door;
+	t_mlx_texture	*t_no;
+	t_mlx_texture	*t_so;
+	t_mlx_texture	*t_we;
+	t_mlx_texture	*t_ea;
+	t_mlx_texture	*door;
 	t_player		*player;
 	char			**raw_map;
 	int				f_color[3];
@@ -125,56 +123,10 @@ typedef struct s_tex
 	int			line_height;
 }	t_tex;
 
-typedef struct s_fc_tex
-{
-	int				x;
-	int				y;
-	int				p;
-	int				tex_x;
-	int				tex_y;
-	float			pos_z;
-	int				cell_x;
-	int				cell_y;
-	float			floor_x;
-	float			floor_y;
-	float			f_step_x;
-	float			f_step_y;
-	float			ray_dir_x0;
-	float			ray_dir_y0;
-	float			ray_dir_x1;
-	float			ray_dir_y1;
-	float			row_distance;
-}	t_fc_tex;
-
-typedef struct s_sprite
-{
-	double			x;
-	double			y;
-	int				d;
-	int				d_y;
-	t_vector		pos;
-	int				fps;
-	t_vector		size;
-	uint32_t		color;
-	int				index;
-	int				stripe;
-	double			inv_det;
-	t_vector		draw_end;
-	int				screen_x;
-	double			distance;
-	int				texture_x;
-	int				texture_y;
-	t_vector		draw_start;
-	double			transform_x;
-	double			transform_y;
-	int				v_move_screen;
-}	t_sprite;
-
 typedef struct s_map
 {
 	int			x;
 	int			y;
-	t_fc_tex	fc;
 	int			hit;
 	t_ray		ray;
 	t_tex		*tex;
@@ -182,21 +134,14 @@ typedef struct s_map
 	t_vector	step;
 	int			map_x;
 	int			map_y;
-	int			op_min;
-	int			op_mid;
-	int			op_max;
 	t_player	player;
-	t_sprite	sprite;
 	t_img		*img_map;
 	t_img		*img_tmp;
-	bool		has_key;
 	char		**matrix;
-	bool		draw_minimap;
-	double		z_buffer[WIDTH];
 	int			buffer[WIDTH][HEIGHT];
 }	t_map;
 
-typedef struct				s_mlx
+typedef struct s_mlx
 {
 	void		*mlx;
 	void		*window;
@@ -212,68 +157,126 @@ typedef struct s_infos
 }	t_infos;
 
 /*utils.c*/
-void	*ft_memalloc(size_t size);
-void	ft_memdel(void **ap);
-int		commacounter(char *line);
-int		ft_strcmp(char *s1, char *s2);
-char	*get_line(int fd, char *line);
+void			*ft_memalloc(size_t size);
+void			ft_memdel(void **ap);
+int				commacounter(char *line);
+int				ft_strcmp(char *s1, char *s2);
+char			*get_line(int fd, char *line);
 
 /*arg_check.c*/
-int		arg_check(int ac, char *av, t_mlx_infos *infos);
-t_mlx	*init_mlx(char *title);
+int				arg_check(int ac, char *av, t_mlx_infos *infos);
+int				valid_args(char	*map_file, t_mlx_infos *infos);
 
 /*initialisation.c*/
-int		initialisation(int ac, char **av, t_infos *infos);
+int				initialisation(int ac, char **av, t_infos *infos);
+t_mlx_infos		*init_infos(void);
+void			init_textures(t_infos *infos);
 
 /*mlx_image.c*/
-t_mlx	*init_mlx(char *title);
-void	free_mlx_infos_on_error(t_mlx_infos *mlx_infos, t_infos *infos);
-t_mlx	*mlx_del(t_mlx *mlx);
-t_img	*new_image(void *mlx);
-t_img	*del_image(t_mlx *mlx, t_img *img);
+t_mlx			*init_mlx(char *title);
+void			free_mlx_infos_on_error(t_mlx_infos *mlx_infos, t_infos *infos);
+t_mlx			*mlx_del(t_mlx *mlx);
+t_img			*new_image(void *mlx);
+t_img			*del_image(t_mlx *mlx, t_img *img);
+
+/*mlx_image_utils.c*/
+int				get_pixel_color(t_mlx_texture *tex, double tex_x, double tex_y);
+void			my_mlx_pixel_put(t_img *data, int x, int y, int color);
 
 /*valid_options.c*/
-int		valid_options(char *line, t_mlx_infos *infos);
+int				valid_options(char *line, t_mlx_infos *infos);
+int				check_options(char *line);
+int				check_double(char *line, t_mlx_infos *infos);
+int				validate_texture(char *line, t_mlx_infos *infos);
+int				can_be_opened(char *file);
 
 /*valid_options_utils.c*/
-int		validate_we_ea(char *line, t_mlx_infos *infos);
-int		validate_no_so(char *line, t_mlx_infos *infos);
-void	save_color_to_infos(char **rgb, t_mlx_infos *infos, char option);
-void	free_char_array(char **array);
+int				validate_we_ea(char *line, t_mlx_infos *infos);
+int				validate_no_so(char *line, t_mlx_infos *infos);
+void			save_color_to_infos(char **rgb, t_mlx_infos *infos, \
+									char option);
+void			free_char_array(char **array);
+void			save_texture_to_infos(char *file, t_mlx_infos *infos, \
+									char option);
 
 /*handle_colors.c*/
-int		validate_color(char *line, t_mlx_infos *infos);
+int				validate_color(char *line, t_mlx_infos *infos);
+char			**split_rgb(char *line, char *trim_with);
+int				has_duplicate_rgb(char *line);
+int				valid_rgb(char **rgb);
+int				rgb_contains_letters(char *line);
+
+/*handle_map_utils.c*/
+char			**copy_2d_char_array(char **array);
+void			get_map_length(int fd, char *map_file, t_mlx_infos *infos);
+int				line_cotains_only_spaces(char *line);
+void			get_player_pos(char **map, int *py, int *px);
+void			dfs(char **map, int y, int x, t_mlx_infos *infos);
 
 /*handle_map.c*/
-int		line_cotains_only_spaces(char *line);
-int		map_has_multiple_players_or_none(char c, char option);
-char	**copy_2d_char_array(char **array);
-void	get_player_pos(char **map, int *py, int *px);
-void	dfs(char **map, int y, int x, t_mlx_infos *infos);
-char	*copy_map_line(char *content);
-void	get_map_length(int fd, char *map_file, t_mlx_infos *infos);
-int		handle_map(t_mlx_infos *infos, int fd);
+int				line_has_invalid_chars(char *line);
+int				handle_map(t_mlx_infos *infos, int fd);
+int				map_has_multiple_players_or_none(char c, char option);
+int				check_maps(t_mlx_infos *infos, int i);
+char			*copy_map_line(char *content);
 
 /*init_map_utils.c*/
-double	get_angle(char c);
-void	set_plan(t_vector *plane, char c);
-int		get_longest_line(char **map);
-char	*dup3(int size, char ch);
+double			get_angle(char c);
+void			set_plan(t_vector *plane, char c);
+int				get_longest_line(char **map);
+char			*dup3(int size, char ch);
+char			*ft_strdup2(char *str, int start, int end);
 
 /*init_map.c*/
-t_map	*init_map(t_mlx_infos *mlx_infos, void *mlx);
+t_map			*init_map(t_mlx_infos *mlx_infos, void *mlx);
+char			*init_line(char *old_line, int l);
+char			**init_matrix(char **m, int height);
+void			set_player_position(t_map *minimap);
+t_img			*my_mlx_new_image(void *mlx, uint32_t width, uint32_t height);
 
 /*movements.c*/
-int		move_keys(int keycode, void *param);
+void			move_right(double y, double x, t_map *map);
+void			move_left(double y, double x, t_map *map);
+void			move_down(double y, double x, t_map *map);
+void			move_up(double y, double x, t_map *map);
+
+/*move_hook.c*/
+int				move_keys(int keycode, void *param);
+void			turn_left(t_player *playr);
+void			turn_right(t_player *player);
+void			is_escape(t_infos *infos, int keycode);
+bool			is_wall(int y, int x, char **matrix);
 
 /*free.c*/
-void	free_infos(t_infos *infos);
+void			free_infos(t_infos *infos);
+void			mlx_delete_texture(t_mlx_infos *mlx_infos, t_infos *infos);
+void			free_mlx_infos(t_infos *infos, t_mlx_infos *mlx_infos);
+void			free_map(t_infos *infos, t_map *map);
 
-/*print.c*/
-void	print_textures(t_map *m, int x, t_mlx_infos *mlx_infos);
-void	draw_buff(t_img *img_tmp, int32_t buffer[WIDTH][HEIGHT], t_mlx *mlx);
+/*print_texture.c*/
+void			print_textures(t_map *m, int x, t_mlx_infos *mlx_infos);
+void			draw_buff(t_img *img_tmp, int32_t buffer[WIDTH][HEIGHT], \
+							t_mlx *mlx);
+t_mlx_texture	*get_texture(t_map *map, t_mlx_infos *mlx_infost_mlx_infos);
+void			set_tex_struct(t_map *map);
+t_mlx_texture	*set_variables(t_map *map, t_mlx_infos *m_d, int x);
 
 /*raycasting.c*/
-void	draw(t_map *map, t_mlx_infos *mlx_infos, t_mlx *mlx);
+void			draw_rays(t_map *minimap, t_mlx *mlx);
+void			draw_map(t_map *m, t_mlx_infos *mlx_infos, t_mlx *mlx);
+void			cast_the_ray_until_hits_the_wall(t_map *map, int hit);
+void			calculate_the_direction_of_the_ray(t_map *map);
+void			set_ray_distance(t_map *map);
+
+/*main.c*/
+void			draw(t_map *map, t_mlx_infos *mlx_infos, t_mlx *mlx);
+int				mouse_move(int x, int y, t_infos *infos);
+
+/*handle_colors_utils.c*/
+uint32_t		rgb(int r, int g, int b, int a);
+void			set_map_error(t_mlx_infos *infos);
+
+/*draw_minimap.c*/
+void			draw_minimap(t_map *m, t_vector *p, int i, t_mlx *mlx);
 
 #endif

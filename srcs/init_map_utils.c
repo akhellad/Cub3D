@@ -6,7 +6,7 @@
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 13:33:05 by akhellad          #+#    #+#             */
-/*   Updated: 2023/08/29 13:45:12 by akhellad         ###   ########.fr       */
+/*   Updated: 2023/08/30 14:33:10 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,20 @@ int	get_longest_line(char **map)
 			result = (int)ft_strlen(map[i]);
 		i++;
 	}
+	return (result);
+}
+
+char	*ft_strdup2(char *str, int start, int end)
+{
+	char	*result;
+	int		i;
+
+	result = malloc(sizeof(char) * (end - start + 1));
+	if (result == NULL)
+		return (printf("%s",MALLOC_FAIL), NULL);
+	i = -1;
+	while (start + ++i != end)
+		result[i] = str[i + start];
+	result[i] = '\0';
 	return (result);
 }

@@ -6,11 +6,37 @@
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 23:31:19 by akhellad          #+#    #+#             */
-/*   Updated: 2023/08/29 00:27:58 by akhellad         ###   ########.fr       */
+/*   Updated: 2023/08/30 14:40:15 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Cub3D.h"
+
+int	validate_color(char *line, t_mlx_infos *infos)
+{
+	char	**rgb;
+
+	if (commacounter(line) == 0 || rgb_contains_letters(line) == 1
+		|| has_duplicate_rgb(line) == 1)
+		return (0);
+	if (line[0] == 'F')
+	{
+		rgb = split_rgb(line, "F \n");
+		if (valid_rgb(rgb) == 1)
+			save_color_to_infos(rgb, infos, 'F');
+		else
+			return (free_char_array(rgb), 0);
+	}
+	if (line[0] == 'C')
+	{
+		rgb = split_rgb(line, "C \n");
+		if (valid_rgb(rgb) == 1)
+			save_color_to_infos(rgb, infos, 'C');
+		else
+			return (free_char_array(rgb), 0);
+	}
+	return (1);
+}
 
 char	**split_rgb(char *line, char *trim_with)
 {
@@ -65,30 +91,4 @@ int	rgb_contains_letters(char *line)
 		}
 	}
 	return (0);
-}
-
-int	validate_color(char *line, t_mlx_infos *infos)
-{
-	char	**rgb;
-
-	if (commacounter(line) == 0 || rgb_contains_letters(line) == 1
-		|| has_duplicate_rgb(line) == 1)
-		return (0);
-	if (line[0] == 'F')
-	{
-		rgb = split_rgb(line, "F \n");
-		if (valid_rgb(rgb) == 1)
-			save_color_to_infos(rgb, infos, 'F');
-		else
-			return (free_char_array(rgb), 0);
-	}
-	if (line[0] == 'C')
-	{
-		rgb = split_rgb(line, "C \n");
-		if (valid_rgb(rgb) == 1)
-			save_color_to_infos(rgb, infos, 'C');
-		else
-			return (free_char_array(rgb), 0);
-	}
-	return (1);
 }

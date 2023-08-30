@@ -6,25 +6,31 @@
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 13:24:16 by akhellad          #+#    #+#             */
-/*   Updated: 2023/08/29 22:00:48 by akhellad         ###   ########.fr       */
+/*   Updated: 2023/08/30 14:33:24 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Cub3D.h"
 
-char	*ft_strdup2(char *str, int start, int end)
+t_map	*init_map(t_mlx_infos *mlx_infos, void *mlx)
 {
-	char	*result;
-	int		i;
+	t_map	*minimap;
 
-	result = malloc(sizeof(char) * (end - start + 1));
-	if (result == NULL)
-		return (printf("%s",MALLOC_FAIL), NULL);
-	i = -1;
-	while (start + ++i != end)
-		result[i] = str[i + start];
-	result[i] = '\0';
-	return (result);
+	minimap = malloc(sizeof(t_map));
+	if (minimap == NULL)
+		return (printf("%s", MALLOC_FAIL), NULL);
+	minimap->matrix = init_matrix(mlx_infos->raw_map, mlx_infos->map_length);
+	set_player_position(minimap);
+	minimap->img_tmp = malloc(sizeof(t_img));
+	minimap->img_map = malloc(sizeof(t_img));
+	if (minimap->img_tmp == NULL)
+		return (printf("%s", MALLOC_FAIL), NULL);
+	minimap->img_tmp->img = mlx_new_image(mlx, WIDTH, HEIGHT);
+	minimap->img_tmp->adrr = mlx_get_data_addr(minimap->img_tmp->img, &minimap->img_tmp->bpp, &minimap->img_tmp->lengh, &minimap->img_tmp->endian);
+	minimap->img_map->img = mlx_new_image(mlx, WIDTH, HEIGHT);
+	minimap->img_map->adrr = mlx_get_data_addr(minimap->img_map->img, &minimap->img_map->bpp, &minimap->img_map->lengh, &minimap->img_map->endian);
+	minimap->tex = malloc(sizeof(t_tex));
+	return (minimap);
 }
 
 char	*init_line(char *old_line, int l)
@@ -43,6 +49,7 @@ char	*init_line(char *old_line, int l)
 	free(line);
 	res = dup3((MINIMAP_SIZE / R) / 2, 'V');
 	res = ft_strjoin(res, old_line);
+	free(old_line);
 	res = ft_strjoin(res, dup3(l - (MINIMAP_SIZE / R) / 2 - k, 'V'));
 	i = -1;
 	while (res[++i] != '\0')
@@ -114,20 +121,3 @@ t_img* my_mlx_new_image(void* mlx, uint32_t width, uint32_t height)
 	return (img);
 }
 
-t_map	*init_map(t_mlx_infos *mlx_infos, void *mlx)
-{
-	t_map	*minimap;
-
-	minimap = malloc(sizeof(t_map));
-	if (minimap == NULL)
-		return (printf("%s", MALLOC_FAIL), NULL);
-	minimap->matrix = init_matrix(mlx_infos->raw_map, mlx_infos->map_length);
-	set_player_position(minimap);
-	minimap->img_tmp = malloc(sizeof(t_img));
-	if (minimap->img_tmp == NULL)
-		return (printf("%s", MALLOC_FAIL), NULL);
-	minimap->img_tmp->img = mlx_new_image(mlx, WIDTH, HEIGHT);
-	minimap->img_tmp->adrr = mlx_get_data_addr(minimap->img_tmp->img, &minimap->img_tmp->bpp, &minimap->img_tmp->lengh, &minimap->img_tmp->endian);
-	minimap->tex = malloc(sizeof(t_tex));
-	return (minimap);
-}

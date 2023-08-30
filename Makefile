@@ -6,7 +6,7 @@
 #    By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/28 20:06:04 by akhellad          #+#    #+#              #
-#    Updated: 2023/08/30 00:30:20 by akhellad         ###   ########.fr        #
+#    Updated: 2023/08/30 15:11:13 by akhellad         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,6 @@ MLX_DIR = mlx/
 INC_DIR = includes/
 
 SRCS    = main.c \
-		file_parser.c \
 		initialisation.c \
 		arg_check.c \
 		utils.c \
@@ -32,11 +31,14 @@ SRCS    = main.c \
 		handle_map_utils.c \
 		init_map.c \
 		init_map_utils.c \
-		hooks.c \
+		minimap.c \
 		movements.c \
 		free.c \
 		raycasting.c \
-		print.c
+		print_texture.c \
+		mlx_image_utils.c \
+		handle_colors_utils.c \
+		move_hook.c \
 
 OBJS    = $(addprefix $(OBJS_DIR),$(SRCS:.c=.o))
 

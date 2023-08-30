@@ -6,7 +6,7 @@
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 23:27:09 by akhellad          #+#    #+#             */
-/*   Updated: 2023/08/29 00:46:31 by akhellad         ###   ########.fr       */
+/*   Updated: 2023/08/30 15:24:39 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,20 +67,6 @@ void	save_color_to_infos(char **rgb, t_mlx_infos *infos, char option)
 		infos->c_color[2] = ft_atoi(rgb[2]);
 	}
 	free_char_array(rgb);
-}
-
-int	can_be_opened(char *file)
-{
-	int	fd;
-
-	fd = open(file, O_RDONLY);
-	if (fd == -1)
-	{
-		printf("%s", TEX_FILE_WRONG);
-		return (0);
-	}
-	close(fd);
-	return (1);
 }
 
 int	validate_no_so(char *line, t_mlx_infos *infos)

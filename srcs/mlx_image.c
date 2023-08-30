@@ -6,11 +6,11 @@
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/28 23:23:58 by akhellad          #+#    #+#             */
-/*   Updated: 2023/08/29 19:47:12 by akhellad         ###   ########.fr       */
+/*   Updated: 2023/08/30 15:29:05 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../includes/Cub3D.h"
+#include "../includes/Cub3D.h"
 
 t_img	*del_image(t_mlx *mlx, t_img *img)
 {
