@@ -85,4 +85,9 @@ void init_textures(t_infos *infos)
 								&(infos->mlx_infos->t_ea->width), &(infos->mlx_infos->t_ea->height));
     infos->mlx_infos->t_ea->img_ptr->adrr = mlx_get_data_addr(infos->mlx_infos->t_ea->img_ptr->img, \
 	&(infos->mlx_infos->t_ea->img_ptr->bpp), &(infos->mlx_infos->t_ea->img_ptr->lengh), &(infos->mlx_infos->t_ea->img_ptr->endian));
+	infos->mlx_infos->t_no = resize_texture(infos->mlx_infos->t_no, 64, 64);
+    infos->mlx_infos->t_so = resize_texture(infos->mlx_infos->t_so, 64, 64);
+    infos->mlx_infos->t_we = resize_texture(infos->mlx_infos->t_we, 64, 64);
+    infos->mlx_infos->t_ea = resize_texture(infos->mlx_infos->t_ea, 64, 64);
+
 }

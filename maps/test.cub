@@ -1,6 +1,6 @@
-NO ./textures/greystone.xpm
-SO ./textures/greystone.xpm
-WE ./textures/greystone.xpm
+NO ./textures/attack_torch.xpm
+SO ./textures/creeper.xpm
+WE ./textures/thumb-1920-764519.xpm
 EA ./textures/greystone.xpm
 F 184,113,39
 C 51,198,227

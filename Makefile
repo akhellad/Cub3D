@@ -48,7 +48,7 @@ MLX		= -Lmlx
 INC     = ${INC_DIR}*.h libft/includes/libft.h
 
 CC      = gcc
-CFLAGS  = -Wall -Wextra -Werror -g3 -I/usr/include -Imlx -O0
+CFLAGS  = -Wall -Wextra -Werror -g3 -I/usr/include -Imlx -O2
 
 LIB_A   = libft/libft.a
 MLX_A   = mlx/libmlx.a

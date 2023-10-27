@@ -45,8 +45,8 @@
 # define DUPLICATE "Error! Duplicates found on the map for the attributes.\n"
 
 # define R 20
-# define WIDTH 1080
-# define HEIGHT 720
+# define WIDTH 1920
+# define HEIGHT 1080
 # define MINIMAP_SIZE 150
 
 typedef struct s_img
@@ -181,6 +181,7 @@ t_img			*del_image(t_mlx *mlx, t_img *img);
 
 /*mlx_image_utils.c*/
 int				get_pixel_color(t_mlx_texture *tex, double tex_x, double tex_y);
+int				get_pixel_color_util(int x, int y, t_mlx_texture *tex);
 void			my_mlx_pixel_put(t_img *data, int x, int y, int color);
 
 /*valid_options.c*/
@@ -260,6 +261,7 @@ void			draw_buff(t_img *img_tmp, int32_t buffer[WIDTH][HEIGHT], \
 t_mlx_texture	*get_texture(t_map *map, t_mlx_infos *mlx_infost_mlx_infos);
 void			set_tex_struct(t_map *map);
 t_mlx_texture	*set_variables(t_map *map, t_mlx_infos *m_d, int x);
+t_mlx_texture	*resize_texture(t_mlx_texture *original_texture, int target_width, int target_height);
 
 /*raycasting.c*/
 void			draw_rays(t_map *minimap, t_mlx *mlx);

@@ -12,27 +12,88 @@
 
 #include "../includes/Cub3D.h"
 
-void	print_textures(t_map *m, int x, t_mlx_infos *mlx_infos)
-{
-	t_mlx_texture	*tex;
-	int				i;
-
-	tex = set_variables(m, mlx_infos, x);
-	while (m->tex->d_start < m->tex->d_end)
-	{
-		m->tex->tex.y = (int)m->tex->t_pos & (64 - 1);
-		m->tex->t_pos += m->tex->step;
-		m->tex->color = get_pixel_color(tex, m->tex->tex.x / \
-		(double)tex->width, m->tex->tex.y / (double)tex->height);
-		m->buffer[x][m->tex->d_start] = m->tex->color;
-		m->tex->d_start++;
-	}
-	i = m->tex->d_start;
-	while (i < HEIGHT)
-		m->buffer[x][i++] = rgb(mlx_infos->f_color[0], \
-								mlx_infos->f_color[1], \
-								mlx_infos->f_color[2], 255);
+void set_pixel_color(t_mlx_texture *texture, int x, int y, int color) {
+	int pixel_index = (y * texture->width + x) * (texture->img_ptr->bpp / 8);
+	texture->img_ptr->adrr[pixel_index] = (color >> 16) & 0xFF;  // Composante rouge (R)
+	texture->img_ptr->adrr[pixel_index + 1] = (color >> 8) & 0xFF; // Composante verte (G)
+	texture->img_ptr->adrr[pixel_index + 2] = color & 0xFF;        // Composante bleue (B)
+	texture->img_ptr->adrr[pixel_index + 3] = (color >> 24) & 0xFF; // Composante alpha (A)
 }
+
+
+int interpolate_colors(t_mlx_texture *original_texture, float x_original, float y_original) {
+	int x_floor = (int)x_original;
+	int y_floor = (int)y_original;
+	int x_ceil = x_floor + 1;
+	int y_ceil = y_floor + 1;
+
+	float x_fraction = x_original - x_floor;
+	float y_fraction = y_original - y_floor;
+
+	int c00 = get_pixel_color_util(x_floor, y_floor, original_texture);
+	int c01 = get_pixel_color_util(x_floor, y_ceil, original_texture);
+	int c10 = get_pixel_color_util(x_ceil, y_floor, original_texture);
+	int c11 = get_pixel_color_util(x_ceil, y_ceil, original_texture);
+
+	int interpolated_color = (int)((1 - x_fraction) * ((1 - y_fraction) * c00 + y_fraction * c01) + x_fraction * ((1 - y_fraction) * c10 + y_fraction * c11));
+
+	return interpolated_color;
+}
+
+
+t_mlx_texture *resize_texture(t_mlx_texture *original_texture, int target_width, int target_height) 
+{
+    t_mlx_texture *resized_texture = malloc(sizeof(t_mlx_texture));
+    resized_texture->width = target_width;
+    resized_texture->height = target_height;
+	resized_texture->img_ptr = original_texture->img_ptr;
+
+    // Allez pixel par pixel dans la nouvelle texture et effectuez l'interpolation
+    for (int x = 0; x < target_width; x++) {
+        for (int y = 0; y < target_height; y++) {
+            // Calculez les coordonnées correspondantes dans la texture d'origine
+            float x_original = x * (original_texture->width - 1) / (target_width - 1);
+            float y_original = y * (original_texture->height - 1) / (target_height - 1);
+
+            // Effectuez l'interpolation pour obtenir la couleur du pixel redimensionné
+            // (utilisez une méthode d'interpolation appropriée)
+            int interpolated_color = interpolate_colors(original_texture, x_original, y_original);
+
+            // Remplissez la couleur dans la nouvelle texture
+            set_pixel_color(resized_texture, x, y, interpolated_color);
+        }
+    }
+
+    return resized_texture;
+}
+
+
+
+void print_textures(t_map *map, int x, t_mlx_infos *mlx_infos) {
+	t_mlx_texture *tex;
+	int i;
+
+	tex = set_variables(map, mlx_infos, x);
+
+	while (map->tex->d_start < map->tex->d_end) {
+		map->tex->tex.y = (int)map->tex->t_pos & (tex->height - 1);
+		map->tex->tex.x = (int)((map->ray.x_hit_point) * (double)tex->width);
+		map->tex->t_pos += map->tex->step;
+
+		map->tex->color = get_pixel_color(tex, map->tex->tex.x / (double)tex->width, map->tex->tex.y / (double)tex->height);
+
+		map->buffer[x][map->tex->d_start] = map->tex->color;
+		map->tex->d_start++;
+	}
+
+	i = map->tex->d_start;
+	while (i < HEIGHT)
+		map->buffer[x][i++] = rgb(mlx_infos->f_color[0], mlx_infos->f_color[1], mlx_infos->f_color[2], 255);
+}
+
+
+
+
 
 void	draw_buff(t_img *img_tmp, int32_t buffer[WIDTH][HEIGHT], t_mlx *mlx)
 {
