@@ -6,11 +6,11 @@
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 22:52:28 by akhellad          #+#    #+#             */
-/*   Updated: 2023/06/01 15:20:53 by akhellad         ###   ########.fr       */
+/*   Updated: 2023/10/30 10:36:51 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/libft.h"
 
 unsigned long	ft_strlcat(char *dest, const char *src, size_t size)
 {

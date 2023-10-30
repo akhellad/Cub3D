@@ -6,11 +6,11 @@
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 15:23:08 by akhellad          #+#    #+#             */
-/*   Updated: 2023/06/01 15:20:44 by akhellad         ###   ########.fr       */
+/*   Updated: 2023/10/30 10:36:51 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/libft.h"
 
 void	ft_putstr_fd(char *s, int fd)
 {

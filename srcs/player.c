@@ -1,24 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handle_colors_utils.c                              :+:      :+:    :+:   */
+/*   player.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/30 14:21:39 by akhellad          #+#    #+#             */
-/*   Updated: 2023/08/30 14:39:20 by akhellad         ###   ########.fr       */
+/*   Created: 2023/10/30 16:33:52 by akhellad          #+#    #+#             */
+/*   Updated: 2023/10/30 16:36:29 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Cub3D.h"
 
-uint32_t	rgb(int r, int g, int b, int a)
+void    init_player(t_cub3d *cub)
 {
-	return (r << 24 | g << 16 | b << 8 | a);
-}
+	int	x;
+	int	y;
 
-void	set_map_error(t_mlx_infos *infos)
-{
-	printf("%s", DFS_ERROR);
-	infos->error = 1;
+	y = -1;
+	cub->player.turn_speed = TURN_SPEED;
+	cub->player.walk_speed = PLAYER_SPEED;
+	cub->player.walk = 0;
+	cub->player.turn = 0;
+	while (cub->map[++y])
+	{
+		x = -1;
+		while (cub->map[y][++x])
+		{
+			if (cub->map[y][x] == cub->p)
+			{
+				cub->player.x = (TILE_SIZE * x + TILE_SIZE / 2);
+				cub->player.y = (TILE_SIZE * y) + TILE_SIZE / 2;
+				return ;
+			}
+		}
+	}
 }

@@ -6,11 +6,11 @@
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 14:55:10 by akhellad          #+#    #+#             */
-/*   Updated: 2023/06/01 15:19:42 by akhellad         ###   ########.fr       */
+/*   Updated: 2023/10/30 10:36:51 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/libft.h"
 
 void	*ft_memset(void *str, int x, size_t n)
 {

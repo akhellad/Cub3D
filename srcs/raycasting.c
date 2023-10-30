@@ -5,129 +5,63 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/29 14:43:34 by akhellad          #+#    #+#             */
-/*   Updated: 2023/08/30 15:25:24 by akhellad         ###   ########.fr       */
+/*   Created: 2023/10/30 16:53:44 by akhellad          #+#    #+#             */
+/*   Updated: 2023/10/30 16:55:40 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Cub3D.h"
 
-void	draw_map(t_map *m, t_mlx_infos *mlx_infos, t_mlx *mlx)
+void	check_direction(t_cub3d *cub, float y, float x)
 {
-	int	i;
-	int	hit;
-
-	i = -1;
-	while (++i < WIDTH)
-	{
-		hit = 0;
-		m->ray.camera.x = ((2 * i) / (double)WIDTH) - 1;
-		m->ray.dir.y = m->player.dir.y + m->player.plane.y * m->ray.camera.x;
-		m->ray.dir.x = m->player.dir.x + m->player.plane.x * m->ray.camera.x;
-		m->map_x = (int)m->player.pos.x;
-		m->map_y = (int)m->player.pos.y;
-		if (m->ray.delta_dist.x == 0)
-			m->ray.delta_dist.x = DBL_MAX;
-		else
-			m->ray.delta_dist.x = fabs(1 / m->ray.dir.x);
-		if (m->ray.delta_dist.y == 0)
-			m->ray.delta_dist.y = DBL_MAX;
-		else
-			m->ray.delta_dist.y = fabs(1 / m->ray.dir.y);
-		calculate_the_direction_of_the_ray(m);
-		cast_the_ray_until_hits_the_wall(m, hit);
-		print_textures(m, i, mlx_infos);
-	}
-	draw_buff(m->img_tmp, m->buffer, mlx);
+	y -= cub->player.y_inc;
+	x -= cub->player.x_inc;
+	if (check_wall(cub, x, y + cub->player.y_inc) && cub->player.y_inc <= 0)
+		cub->player.direction = NO;
+	else if (check_wall(cub, x + cub->player.x_inc, y)
+		&& cub->player.x_inc <= 0)
+		cub->player.direction = WE;
+	else if (check_wall(cub, x, y + cub->player.y_inc))
+		cub->player.direction = SO;
+	else if (check_wall(cub, x + cub->player.x_inc, y))
+		cub->player.direction = EA;
 }
 
-void	set_ray_distance(t_map *map)
+void	rays_calc(t_cub3d *cub, t_raycast *obj)
 {
-	if (map->ray.dir.y == 0)
-		map->ray.delta_dist.y = 1e30;
-	if (map->ray.dir.x == 0)
-		map->ray.delta_dist.x = 1e30;
-}
-
-void	calculate_the_direction_of_the_ray(t_map *map)
-{
-	set_ray_distance(map);
-	if (map->ray.dir.x < 0)
+	while (!check_wall(cub, (obj->x), (obj->y)))
 	{
-		map->step.x = -1;
-		map->ray.side_dist.x = (map->player.pos.x - map->map_x)
-			* map->ray.delta_dist.x;
-	}
-	else
-	{
-		map->step.x = 1;
-		map->ray.side_dist.x = (map->map_x + 1.0 - map->player.pos.x)
-			* map->ray.delta_dist.x;
-	}
-	if (map->ray.dir.y < 0)
-	{
-		map->step.y = -1;
-		map->ray.side_dist.y = (map->player.pos.y - map->map_y)
-			* map->ray.delta_dist.y;
-	}
-	else
-	{
-		map->step.y = 1;
-		map->ray.side_dist.y = (map->map_y + 1.0 - map->player.pos.y)
-			* map->ray.delta_dist.y;
+		if ((obj->angel) == (cub->player.angel))
+			my_mlx_put_pixel(&cub->mini_img, floor(obj->y)
+				* SCALE_SIZE, floor(obj->x) * SCALE_SIZE, LINE_COLOR);
+		obj->y += cub->player.y_inc;
+		obj->x += cub->player.x_inc;
 	}
 }
 
-void	cast_the_ray_until_hits_the_wall(t_map *map, int hit)
+void	raycast(t_cub3d *cub)
 {
-	while (hit == 0)
-	{
-		if (map->ray.side_dist.x < map->ray.side_dist.y)
-		{
-			map->ray.side_dist.x += map->ray.delta_dist.x;
-			map->map_x += map->step.x;
-			map->side = 0;
-		}
-		else
-		{
-			map->ray.side_dist.y += map->ray.delta_dist.y;
-			map->map_y += map->step.y;
-			map->side = 1;
-		}
-		if (map->matrix[(int)map->map_y][(int)map->map_x] > '0')
-			hit = 1;
-	}
-	if (map->side == 0)
-		map->ray.wall_dist = map->ray.side_dist.x - map->ray.delta_dist.x;
-	else
-		map->ray.wall_dist = map->ray.side_dist.y - map->ray.delta_dist.y;
-	if (map->ray.wall_dist < 1e-4)
-		map->ray.wall_dist = 0.4;
-}
+	t_raycast	obj;
 
-void	draw_rays(t_map *minimap, t_mlx *mlx)
-{
-	int		i;
-	double	y;
-	double	x;
-	double	tmp_y;
-	double	tmp_x;
-
-	tmp_y = minimap->player.dir.y / 5;
-	tmp_x = minimap->player.dir.x / 5;
-	y = minimap->player.dir.y;
-	x = minimap->player.dir.x;
-	i = 0;
-	while (i < 80)
+	obj.angel = cub->player.angel - 30.0;
+	obj.start_x = -1;
+	while (++obj.start_x < WINDOW_WIDTH)
 	{
-		my_mlx_pixel_put(minimap->img_map,
-			MINIMAP_SIZE / 2 + x,
-			MINIMAP_SIZE / 2 + y,
-			rgb(0, 0, 255, 255));
-		y += tmp_y;
-		x += tmp_x;
-		i++;
+		obj.rad = obj.angel * (PI / 180.0);
+		cub->player.dir_x = cub->player.x - floor(1000000000 * cos(obj.rad));
+		cub->player.dir_y = cub->player.y - floor(1000000000 * sin(obj.rad));
+		cub->player.dif_x = cub->player.dir_x - cub->player.x;
+		cub->player.dif_y = cub->player.dir_y - cub->player.y;
+		cub->player.steps = my_abs(cub->player.dif_y);
+		if (my_abs(cub->player.dif_x) > my_abs(cub->player.dif_y))
+			cub->player.steps = my_abs(cub->player.dif_x);
+		cub->player.x_inc = cub->player.dif_x / cub->player.steps;
+		cub->player.y_inc = cub->player.dif_y / cub->player.steps;
+		obj.y = cub->player.y;
+		obj.x = cub->player.x;
+		rays_calc(cub, &obj);
+		check_direction(cub, obj.y, obj.x);
+		draw_walls(cub, obj);
+		obj.angel += 60.0 / WINDOW_WIDTH;
 	}
-	mlx_put_image_to_window(mlx->mlx,
-		mlx->window, minimap->img_map->img, 0, 0);
 }

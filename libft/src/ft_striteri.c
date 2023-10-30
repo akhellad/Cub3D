@@ -6,11 +6,11 @@
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 15:16:23 by akhellad          #+#    #+#             */
-/*   Updated: 2023/06/01 15:20:49 by akhellad         ###   ########.fr       */
+/*   Updated: 2023/10/30 10:36:51 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/libft.h"
 
 void	ft_striteri(char const *s, void (*f)(unsigned int, char *))
 {

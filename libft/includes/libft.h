@@ -6,7 +6,7 @@
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 15:59:50 by akhellad          #+#    #+#             */
-/*   Updated: 2023/07/25 22:43:18 by akhellad         ###   ########.fr       */
+/*   Updated: 2023/10/30 16:11:01 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	*ft_memmove(void *dest, const void *src, size_t n);
 char	*ft_strdup(const char *src);
 size_t	ft_strlcat(char *dest, const char *src, size_t size);
 size_t	ft_strlcpy(char *dest, const char *src, size_t size);
-int		ft_strncmp(char *s1, char *s2, unsigned int n);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
 int		ft_tolower(int c);
 int		ft_toupper(int c);
 char	*ft_itoa(int n);
@@ -71,5 +71,9 @@ char	**ft_split(char const *s, char c);
 void	ft_putstr_fd(char *s, int fd);
 size_t	ft_strlen(const char *str);
 char	*get_next_line(int fd);
+void	ft_error(char *s);
+int		ft_strchr_index(const char *s, char *c);
+int		ft_strcmp(const char *s1, const char *s2);
+int		ft_is_space(int c);
 
 #endif

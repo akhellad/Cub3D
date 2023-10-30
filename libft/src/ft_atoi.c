@@ -6,47 +6,52 @@
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 08:46:16 by akhellad          #+#    #+#             */
-/*   Updated: 2023/06/01 15:18:50 by akhellad         ###   ########.fr       */
+/*   Updated: 2023/10/30 16:10:49 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/libft.h"
 
-int	ft_atoi2(const char *nptr1, long int fin, long int neg)
+void	ft_error(char *s)
 {
-	while (*nptr1 >= '0' && *nptr1 <= '9')
-	{
-		fin = fin * 10 + (*nptr1 - '0');
-		nptr1 ++;
-		if (fin > LLONG_MAX)
-		{
-			if (neg > 0)
-				return (-1);
-			else
-				return (0);
-		}
-	}
-	return (fin * neg);
+	ft_putstr_fd("\033[0;31m", 2);
+	ft_putstr_fd("Error\n", 2);
+	ft_putstr_fd(s, 2);
+	ft_putstr_fd("\033[0;37m", 2);
+	exit(EXIT_FAILURE);
 }
 
-int	ft_atoi(const char *nptr)
-{
-	long int		fin;
-	long int		neg;
-	char			*nptr1;
 
-	nptr1 = (char *)nptr;
-	fin = 0;
-	neg = 1;
-	while (*nptr1 == ' ' || *nptr1 == '\f' || *nptr1 == '\n' || *nptr1 == '\r' \
-	|| *nptr1 == '\t' || *nptr1 == '\v')
-		nptr1 ++;
-	if (*nptr1 == '+')
-		nptr1 ++;
-	else if (*nptr1 == '-')
-	{
-		neg = -1;
-		nptr1 ++;
-	}
-	return (ft_atoi2(nptr1, fin, neg));
+int	ft_is_space(int c)
+{	
+	return (c == '\f' || c == '\n' || c == '\r' \
+	|| c == '\t' || c == '\v' || c == ' ');
 }
+
+int	ft_atoi(const char *str)
+{
+	int		i;
+	int		sign;
+	long	res;
+
+	i = 0;
+	res = 0;
+	sign = 1;
+	while (ft_is_space((int)str[i]))
+		i++;
+	if (str[i] == '-' || str[i] == '+')
+	{
+		if (str[i] == '-')
+			sign *= -1;
+		i++;
+	}
+	while (ft_isdigit(str[i]))
+	{
+		res = res * 10 +(str[i] - 48);
+		i++;
+		if ((res * -1 < (long)INT_MIN) || (res > (long)INT_MAX && sign == 1))
+			return (-1);
+	}
+	return ((int)res * sign);
+}
+

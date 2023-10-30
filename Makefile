@@ -6,7 +6,7 @@
 #    By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/28 20:06:04 by akhellad          #+#    #+#              #
-#    Updated: 2023/08/30 15:11:13 by akhellad         ###   ########.fr        #
+#    Updated: 2023/10/30 17:06:13 by akhellad         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,25 +20,20 @@ MLX_DIR = mlx/
 INC_DIR = includes/
 
 SRCS    = main.c \
-		initialisation.c \
-		arg_check.c \
-		utils.c \
-		mlx_image.c \
-		valid_options.c \
-		valid_options_utils.c \
-		handle_colors.c \
-		handle_map.c \
-		handle_map_utils.c \
-		init_map.c \
-		init_map_utils.c \
-		minimap.c \
-		movements.c \
-		free.c \
-		raycasting.c \
-		print_texture.c \
-		mlx_image_utils.c \
-		handle_colors_utils.c \
-		move_hook.c \
+initialisation.c \
+utils.c			 \
+infos.c			 \
+ft_2nd_split.c	 \
+free_utils.c	 \
+check_map.c	 \
+game.c 		\
+player.c	\
+draw_utils.c \
+images.c	\
+hooks.c		\
+render.c	\
+draw.c		\
+raycasting.c
 
 OBJS    = $(addprefix $(OBJS_DIR),$(SRCS:.c=.o))
 
@@ -48,7 +43,7 @@ MLX		= -Lmlx
 INC     = ${INC_DIR}*.h libft/includes/libft.h
 
 CC      = gcc
-CFLAGS  = -Wall -Wextra -Werror -g3 -I/usr/include -Imlx -O2
+CFLAGS  = -g3 -I/usr/include -Imlx -O2
 
 LIB_A   = libft/libft.a
 MLX_A   = mlx/libmlx.a

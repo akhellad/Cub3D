@@ -5,89 +5,125 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/28 22:19:37 by akhellad          #+#    #+#             */
-/*   Updated: 2023/08/30 17:06:56 by akhellad         ###   ########.fr       */
+/*   Created: 2023/10/30 10:33:46 by akhellad          #+#    #+#             */
+/*   Updated: 2023/10/30 16:16:06 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Cub3D.h"
 
-int	initialisation(int ac, char **av, t_infos *infos)
+int	is_empty_file(int fd)
 {
-	if (ac == 1)
+	char	*line;
+	int		i;
+
+	i = 1;
+	line = get_next_line(fd);
+	while (line)
 	{
-		printf("%s", NOA);
-		exit(0);
+		if (!is_empty(line))
+			i = 0;
+		free(line);
+		line = get_next_line(fd);
 	}
-	infos->mlx = init_mlx("Cub3D");
-	infos->mlx_infos = init_infos();
-	if (arg_check(ac, av[1], infos->mlx_infos) == 0)
-	{
-		free_mlx_infos_on_error(infos->mlx_infos, infos);
-		exit(0);
-	}
-	infos->minimap = init_map(infos->mlx_infos, infos->mlx->mlx);
-	init_textures(infos);
-		if (infos->minimap->tex == NULL)
-		return (printf("%s", MALLOC_FAIL), 1);
-	return (0);
+	return (i);
 }
 
-t_mlx_infos	*init_infos(void)
-{
-	t_mlx_infos	*mlx_infos;
 
-	mlx_infos = malloc(sizeof(t_mlx_infos));
-	if (mlx_infos == NULL)
-		return (printf("%s", MALLOC_FAIL), NULL);
-	mlx_infos->map_copy = NULL;
-	mlx_infos->raw_map = NULL;
-	mlx_infos->player = NULL;
-	mlx_infos->no = ft_strdup("X");
-	mlx_infos->so = ft_strdup("X");
-	mlx_infos->we = ft_strdup("X");
-	mlx_infos->ea = ft_strdup("X");
-	mlx_infos->f_color[0] = -1;
-	mlx_infos->f_color[1] = -1;
-	mlx_infos->f_color[2] = -1;
-	mlx_infos->c_color[0] = -1;
-	mlx_infos->c_color[1] = -1;
-	mlx_infos->c_color[2] = -1;
-	mlx_infos->reading_pos = 0;
-	mlx_infos->map_length = 0;
-	mlx_infos->error = 0;
-	return (mlx_infos);
+int	check_args(t_cub3d *cub, int ac, char *file)
+{
+	int	fd;
+	int	pos;
+
+	if (ac != 2)
+		return (ft_error("Usage: ./cub3d <map_file.cub>\n"), 0);
+	pos = ft_strlen(file) - 4;
+	if (ft_strncmp(file + pos, ".cub", 4))
+		return (ft_error("Invalid file <*.cub>\n"), 0);
+	fd = open(file, O_RDONLY);
+	if (fd == -1)
+		return (ft_error("Cannot read file\n"), close(fd), 0);
+	if (is_empty_file(fd))
+		ft_error("Empty file\n");
+	close (fd);
+	fd = open(file, O_RDONLY);
+	cub->full_file = malloc_2nd_char(cub, fd);
+	if (!cub->full_file)
+		ft_error("Invalid file\n");
+	return (1);
 }
 
-void init_textures(t_infos *infos)
+char	**malloc_2nd_char(t_cub3d *cub, int fd)
 {
-    infos->mlx_infos->t_no = malloc(sizeof(t_mlx_texture));
-    infos->mlx_infos->t_no->img_ptr = malloc(sizeof(t_img));
-    infos->mlx_infos->t_so = malloc(sizeof(t_mlx_texture));
-    infos->mlx_infos->t_so->img_ptr = malloc(sizeof(t_img));
-    infos->mlx_infos->t_we = malloc(sizeof(t_mlx_texture));
-    infos->mlx_infos->t_we->img_ptr = malloc(sizeof(t_img));
-    infos->mlx_infos->t_ea = malloc(sizeof(t_mlx_texture));
-    infos->mlx_infos->t_ea->img_ptr = malloc(sizeof(t_img));
-    infos->mlx_infos->t_no->img_ptr->img = mlx_xpm_file_to_image(infos->mlx->mlx, infos->mlx_infos->no, \
-								&(infos->mlx_infos->t_no->width), &(infos->mlx_infos->t_no->height));
-    infos->mlx_infos->t_no->img_ptr->adrr = mlx_get_data_addr(infos->mlx_infos->t_no->img_ptr->img, \
-	&(infos->mlx_infos->t_no->img_ptr->bpp), &(infos->mlx_infos->t_no->img_ptr->lengh), &(infos->mlx_infos->t_no->img_ptr->endian));
-    infos->mlx_infos->t_so->img_ptr->img = mlx_xpm_file_to_image(infos->mlx->mlx, infos->mlx_infos->so, \
-								&(infos->mlx_infos->t_so->width), &(infos->mlx_infos->t_so->height));
-    infos->mlx_infos->t_so->img_ptr->adrr = mlx_get_data_addr(infos->mlx_infos->t_so->img_ptr->img, \
-	&(infos->mlx_infos->t_so->img_ptr->bpp), &(infos->mlx_infos->t_so->img_ptr->lengh), &(infos->mlx_infos->t_so->img_ptr->endian));
-    infos->mlx_infos->t_we->img_ptr->img = mlx_xpm_file_to_image(infos->mlx->mlx, infos->mlx_infos->we, \
-								&(infos->mlx_infos->t_we->width), &(infos->mlx_infos->t_we->height));
-    infos->mlx_infos->t_we->img_ptr->adrr = mlx_get_data_addr(infos->mlx_infos->t_we->img_ptr->img, \
-	&(infos->mlx_infos->t_we->img_ptr->bpp), &(infos->mlx_infos->t_we->img_ptr->lengh), &(infos->mlx_infos->t_we->img_ptr->endian));
-	infos->mlx_infos->t_ea->img_ptr->img = mlx_xpm_file_to_image(infos->mlx->mlx, infos->mlx_infos->ea, \
-								&(infos->mlx_infos->t_ea->width), &(infos->mlx_infos->t_ea->height));
-    infos->mlx_infos->t_ea->img_ptr->adrr = mlx_get_data_addr(infos->mlx_infos->t_ea->img_ptr->img, \
-	&(infos->mlx_infos->t_ea->img_ptr->bpp), &(infos->mlx_infos->t_ea->img_ptr->lengh), &(infos->mlx_infos->t_ea->img_ptr->endian));
-	infos->mlx_infos->t_no = resize_texture(infos->mlx_infos->t_no, 64, 64);
-    infos->mlx_infos->t_so = resize_texture(infos->mlx_infos->t_so, 64, 64);
-    infos->mlx_infos->t_we = resize_texture(infos->mlx_infos->t_we, 64, 64);
-    infos->mlx_infos->t_ea = resize_texture(infos->mlx_infos->t_ea, 64, 64);
+	char	*line;
 
+	cub->lines = 0;
+	line = get_next_line(fd);
+	while (line)
+	{
+		cub->lines++;
+		free(line);
+		line = get_next_line(fd);
+	}
+	free(line);
+	cub->full_file = ft_calloc(sizeof(char *), cub->lines + 1);
+	if (!cub->full_file)
+		return (close(fd), NULL);
+	return (close(fd), cub->full_file);
+}
+
+void	init_cub(t_cub3d *cub, char *file)
+{
+	int		i ;
+	int		fd ;
+	char	*line;
+
+	i = 0;
+	fd = open(file, O_RDONLY);
+	line = get_next_line(fd);
+	while (line)
+	{
+		if (!is_info(line))
+			break ;
+		if (!is_empty(line))
+			cub->full_file[i++] = ft_strdup(line);
+		free(line);
+		line = get_next_line(fd);
+	}
+	while (line)
+	{
+		cub->full_file[i++] = ft_strdup(line);
+		free(line);
+		line = get_next_line(fd);
+	}
+	close(fd);
+	check_infos(cub);
+}
+
+void	check_infos(t_cub3d *cub)
+{
+	int	i;
+	int	j;
+
+	i = -1;
+	cub->info_size = 0;
+	while (cub->full_file[++i])
+		if (is_info(cub->full_file[i]))
+			cub->info_size++;
+	if (cub->info_size != 6)
+		ft_error("Invalid file\n");
+	cub->info = ft_calloc(sizeof(t_info), cub->info_size);
+	i = -1;
+	while (cub->full_file[++i])
+		if (is_info(cub->full_file[i]))
+			parse_info(cub, cub->info, cub->full_file[i]);
+	j = -1;
+	while (++j < cub->info_size)
+	{
+		i = j;
+		while (++i < 6)
+			if (ft_strcmp(cub->info[j].id, cub->info[i].id))
+				ft_error("Duplicate infos\n");
+	}
+	init_map(cub);
 }

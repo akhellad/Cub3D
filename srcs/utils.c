@@ -5,64 +5,68 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/28 23:14:18 by akhellad          #+#    #+#             */
-/*   Updated: 2023/08/30 15:24:50 by akhellad         ###   ########.fr       */
+/*   Created: 2023/10/30 10:46:31 by akhellad          #+#    #+#             */
+/*   Updated: 2023/10/30 16:21:00 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Cub3D.h"
 
-void	*ft_memalloc(size_t size)
-{
-	void	*ptr;
-
-	ptr = malloc(size);
-	if (ptr == NULL)
-		return (NULL);
-	ft_bzero(ptr, size);
-	return (ptr);
-}
-
-void	ft_memdel(void **ap)
-{
-	free(*ap);
-	*ap = (NULL);
-}
-
-int	ft_strcmp(char *s1, char *s2)
+int	in_set(char c, char *set)
 {
 	int	i;
 
 	i = 0;
-	while (s1[i] || s2[i])
+	while (set[i])
 	{
-		if (s1[i] != s2[i])
+		if (set[i] == c)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int is_empty(char *s)
+{
+	int	i;
+
+	i = -1;
+	while (s[++i])
+		if (!ft_is_space(s[i]))
 			return (0);
-		i++;
-	}
 	return (1);
 }
 
-int	commacounter(char *line)
+int	is_info(char *line)
 {
-	int	i;
-	int	commacount;
+	while (ft_is_space(*line))
+		line++;
+	if (!*line)
+		return (1);
+	if (!ft_strncmp(line, "EA", 2) || !ft_strncmp(line, "NO", 2)
+		|| !ft_strncmp(line, "SO", 2) || !ft_strncmp(line, "WE", 2)
+		|| !ft_strncmp(line, "F", 1) || !ft_strncmp(line, "C", 1))
+		return (1);
+	return (0);
+}
 
+char	*dup_line(char *src, int len)
+{
+	char	*dst;
+	int		i ;
+	int		j ;
+
+	i = -1;
+	dst = ft_calloc(sizeof(char), len);
+	while (++i < len - 1)
+		dst[i] = 'x';
 	i = 0;
-	commacount = 0;
-	while (line[i] != '\0')
+	j = -1;
+	while (src && src[++j])
 	{
-		if (line[i] == ',')
-			commacount++;
 		i++;
+		if (in_set(src[j], "NWES01"))
+			dst[i] = src[j];
 	}
-	if (commacount != 2)
-		return (printf("%s", COMMA), 0);
-	return (1);
-}
-
-char	*get_line(int fd, char *line)
-{
-	free(line);
-	return (get_next_line(fd));
+	return (dst);
 }
