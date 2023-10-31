@@ -6,7 +6,7 @@
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 12:31:10 by akhellad          #+#    #+#             */
-/*   Updated: 2023/10/30 16:22:57 by akhellad         ###   ########.fr       */
+/*   Updated: 2023/10/31 10:41:33 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	**dup_map(t_cub3d *cub)
 	return (dup);
 }
 
-int is_closed(t_cub3d *cub)
+int	is_closed(t_cub3d *cub)
 {
 	char	**dup;
 	int		y;
@@ -63,7 +63,7 @@ int	check_token(t_cub3d *cub)
 	count = -1;
 	y = -1;
 	while (cub->map[++y])
-	{	
+	{
 		x = -1;
 		while (cub->map[y][++x])
 		{
@@ -79,10 +79,10 @@ int	check_token(t_cub3d *cub)
 	return (count);
 }
 
-void    check_map(t_cub3d *cub)
+void	check_map(t_cub3d *cub)
 {
-    if (!is_closed(cub))
-        ft_error("Invalid map\n");
+	if (!is_closed(cub))
+		ft_error("Invalid map\n");
 	if (check_token(cub))
 		ft_error("Invalid map\n");
 	if (cub->p == 'N')
@@ -95,7 +95,7 @@ void    check_map(t_cub3d *cub)
 		cub->player.angel = 0;
 }
 
-void    init_map(t_cub3d *cub)
+void	init_map(t_cub3d *cub)
 {
 	int	i;
 	int	j;

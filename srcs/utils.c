@@ -6,7 +6,7 @@
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 10:46:31 by akhellad          #+#    #+#             */
-/*   Updated: 2023/10/30 16:21:00 by akhellad         ###   ########.fr       */
+/*   Updated: 2023/10/31 10:46:01 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	in_set(char c, char *set)
 	return (0);
 }
 
-int is_empty(char *s)
+int	is_empty(char *s)
 {
 	int	i;
 

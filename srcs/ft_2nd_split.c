@@ -6,7 +6,7 @@
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 11:51:51 by akhellad          #+#    #+#             */
-/*   Updated: 2023/10/30 12:57:00 by akhellad         ###   ########.fr       */
+/*   Updated: 2023/10/31 10:43:18 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,13 @@ static int	ft_word(char *str, char *set)
 	word = 1;
 	i = 0;
 	count = 0;
-	while(str[i])
+	while (str[i])
 	{
-		if(in_set(str[i], set))
+		if (in_set(str[i], set))
 			word = 1;
 		else
 		{
-			if(word == 1)
+			if (word == 1)
 				count++;
 			word = 0;
 		}
@@ -66,7 +66,7 @@ static char	*ft_worddup(char *str, char *set, int *index)
 	return (ptr);
 }
 
-char    **ft_2nd_split(char const	*s, char *set, int *len)
+char	**ft_2nd_split(char const	*s, char *set, int *len)
 {
 	char	**ptr;
 	int		count;
@@ -75,7 +75,7 @@ char    **ft_2nd_split(char const	*s, char *set, int *len)
 
 	index = 0;
 	i = 0;
-	if(!s)
+	if (!s)
 		return (NULL);
 	count = ft_word((char *)s, set);
 	ptr = malloc(sizeof(char *) * (count + 1));
@@ -84,7 +84,7 @@ char    **ft_2nd_split(char const	*s, char *set, int *len)
 	while (i < count)
 	{
 		ptr[i] = ft_worddup((char *)s, set, &index);
-		if(!ptr[i])
+		if (!ptr[i])
 			return (ft_free(ptr, i));
 		i++;
 	}

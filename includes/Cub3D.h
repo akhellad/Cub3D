@@ -6,7 +6,7 @@
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 10:26:30 by akhellad          #+#    #+#             */
-/*   Updated: 2023/10/30 17:08:40 by akhellad         ###   ########.fr       */
+/*   Updated: 2023/10/31 10:47:26 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,12 +173,12 @@ void	init_cub(t_cub3d *cub, char *file);
 void	check_infos(t_cub3d *cub);
 
 /*utils.c*/
-int 	is_empty(char *s);
+int		is_empty(char *s);
 int		is_info(char *line);
 int		in_set(char c, char *set);
 char	*dup_line(char *src, int len);
 
-char    **ft_2nd_split(char const	*s, char *set, int *len);
+char	**ft_2nd_split(char const	*s, char *set, int *len);
 
 /*free_utils.c*/
 void	tab_free(char **tab);
@@ -187,18 +187,19 @@ int		exit_btn(t_cub3d *cub);
 void	free_utils(t_cub3d cub);
 
 /*infos.c*/
-void    parse_info(t_cub3d *cub, t_info *info, char *file);
+void	parse_info(t_cub3d *cub, t_info *info, char *file);
 
 /*check_map.c*/
-void    init_map(t_cub3d *cub);
+void	init_map(t_cub3d *cub);
 
 /*game.c*/
-void    draw_map(t_cub3d *cub);
+void	draw_map(t_cub3d *cub);
 void	move_player(t_cub3d *cub, float x, float y);
 int		check_wall(t_cub3d *cub, float new_x, float new_y);
 
 /*player.c*/
-void    init_player(t_cub3d *cub);
+void	init_player(t_cub3d *cub);
+void	draw_player(t_cub3d *cub, float y_pos, float x_pos, int color);
 
 /*draw_utils.c*/
 char	*get_info_value(t_cub3d *cub, const char *id);
@@ -207,6 +208,7 @@ int		my_abs(int x);
 /*images.c*/
 void	new_main_img(t_cub3d *cub, t_my_mlx *data, int width, int height);
 void	new_black_obj(t_my_mlx *data, int hiegth, int width);
+void	new_obj(t_my_mlx *data, t_obj img, int color, int size);
 
 /*hooks.c*/
 int		key_pressed(int keycode, t_cub3d *cub);

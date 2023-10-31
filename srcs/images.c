@@ -6,7 +6,7 @@
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:42:07 by akhellad          #+#    #+#             */
-/*   Updated: 2023/10/30 16:50:39 by akhellad         ###   ########.fr       */
+/*   Updated: 2023/10/31 10:44:01 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,24 @@ void	new_main_img(t_cub3d *cub, t_my_mlx *data, int width, int height)
 			&(data->size_line), &(data->endian));
 	data->height = height;
 	data->width = width;
+}
+
+void	new_obj(t_my_mlx *data, t_obj img, int color, int size)
+{
+	int			y;
+	int			x;
+
+	y = img.y_pos;
+	while (y < img.y_pos + size)
+	{
+		x = img.x_pos;
+		while (x < img.x_pos + size)
+		{
+			my_mlx_put_pixel(data, y, x, color);
+			x++;
+		}
+		y++;
+	}
 }
 
 void	new_black_obj(t_my_mlx *data, int hiegth, int width)

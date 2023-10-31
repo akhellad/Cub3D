@@ -6,16 +6,16 @@
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:33:52 by akhellad          #+#    #+#             */
-/*   Updated: 2023/10/30 16:36:29 by akhellad         ###   ########.fr       */
+/*   Updated: 2023/10/31 10:22:59 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Cub3D.h"
 
-void    init_player(t_cub3d *cub)
+void	init_player(t_cub3d *cub)
 {
-	int	x;
-	int	y;
+	int		y;
+	int		x;
 
 	y = -1;
 	cub->player.turn_speed = TURN_SPEED;
@@ -35,4 +35,19 @@ void    init_player(t_cub3d *cub)
 			}
 		}
 	}
+}
+
+void	draw_player(t_cub3d *cub, float y_pos, float x_pos, int color)
+{
+	t_obj	img;
+
+	cub->player.x = x_pos;
+	cub->player.y = y_pos;
+	img.x_pos = cub->player.x * SCALE_SIZE;
+	img.y_pos = cub->player.y * SCALE_SIZE;
+	if (img.x_pos > 10 * TILE_SIZE * SCALE_SIZE)
+		img.x_pos = 10 * TILE_SIZE * SCALE_SIZE;
+	if (img.y_pos > 10 * TILE_SIZE * SCALE_SIZE)
+		img.y_pos = 10 * TILE_SIZE * SCALE_SIZE;
+	new_obj(&cub->mini_img, img, color, 3);
 }

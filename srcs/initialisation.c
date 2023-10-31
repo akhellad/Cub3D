@@ -6,7 +6,7 @@
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 10:33:46 by akhellad          #+#    #+#             */
-/*   Updated: 2023/10/30 16:16:06 by akhellad         ###   ########.fr       */
+/*   Updated: 2023/10/31 10:44:45 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int	is_empty_file(int fd)
 	}
 	return (i);
 }
-
 
 int	check_args(t_cub3d *cub, int ac, char *file)
 {

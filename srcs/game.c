@@ -6,33 +6,11 @@
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:25:53 by akhellad          #+#    #+#             */
-/*   Updated: 2023/10/30 17:03:20 by akhellad         ###   ########.fr       */
+/*   Updated: 2023/10/31 10:43:40 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Cub3D.h"
-
-void	init_textures(t_cub3d *cub)
-{
-	int			i;
-	const char	*dir[] = {"NO", "EA", "SO", "WE"};
-
-	i = 0;
-	cub->textures = ft_calloc(sizeof(t_textures), cub->info_size - 2);
-	while (i < 4)
-	{
-		cub->textures[i].img = mlx_xpm_file_to_image(cub->mlx.mlx_ptr,
-				get_info_value(cub, dir[i]),
-				&cub->textures[i].width, &cub->textures[i].height);
-		if (!cub->textures[i].img)
-			return (ft_putstr_fd("\033[0;31mError\ninvalid texture\n", 2),
-				ft_exit(cub, 1));
-		cub->textures[i].addr = (int *)mlx_get_data_addr(cub->textures[i].img,
-				&cub->textures[i].bits_per_pixel,
-				&cub->textures[i].size_line, &cub->textures[i].endian);
-		i++;
-	}
-}
 
 int	check_wall(t_cub3d *cub, float new_x, float new_y)
 {
@@ -62,12 +40,10 @@ void	move_player_angel(t_cub3d *cub, float angel, float y_sin, float x_cos)
 	while (!check_wall(cub, x - (loop * x_cos), y - (loop * y_sin))
 		&& loop < PLAYER_SPEED)
 		loop++;
-	if (!check_wall(cub, cub->player.x - loop * x_cos,
-			cub->player.y - loop * y_sin))
-	{
+	if (!check_wall(cub, cub->player.x - loop * x_cos, cub->player.y))
 		cub->player.x -= loop * x_cos;
+	if (!check_wall(cub, cub->player.x, cub->player.y - loop * y_sin))
 		cub->player.y -= loop * y_sin;
-	}
 }
 
 void	move_player(t_cub3d *cub, float x, float y)
@@ -82,22 +58,45 @@ void	move_player(t_cub3d *cub, float x, float y)
 		move_player_angel(cub, cub->player.angel - 90.0, 0, 0);
 }
 
-void    draw_map(t_cub3d *cub)
+void	init_textures(t_cub3d *cub)
 {
-    cub->player.rotate = 0;
-    cub->player.last_x = 0;
-    cub->window_height = cub->map_height * (TILE_SIZE * SCALE_SIZE);
-    cub->window_width = cub->map_width * (TILE_SIZE * SCALE_SIZE);
-    cub->mlx.mlx_ptr = mlx_init();
-    cub->mlx.win = mlx_new_window(cub->mlx.mlx_ptr, WINDOW_WIDTH,
-		    WINDOW_HEIGTH, "Cub3D");
-    init_player(cub);
-    init_textures(cub);
-    new_main_img(cub, &cub->mini_img, cub->window_width, cub->window_height);
-    new_main_img(cub, &cub->map_img, WINDOW_WIDTH, WINDOW_HEIGTH);
-	mlx_hook(cub->mlx.win, 2, 1L<<0, key_pressed, cub);
-	mlx_hook(cub->mlx.win, 3, 1L<<1, key_released, cub);
+	int			i;
+	const char	*dir[] = {"NO", "EA", "SO", "WE"};
+
+	i = 0;
+	cub->textures = ft_calloc(sizeof(t_textures), cub->info_size - 2);
+	while (i < 4)
+	{
+		cub->textures[i].img = mlx_xpm_file_to_image(cub->mlx.mlx_ptr,
+				get_info_value(cub, dir[i]),
+				&cub->textures[i].width, &cub->textures[i].height);
+		if (!cub->textures[i].img)
+			return (ft_putstr_fd("\033[0;31mError\ninvalid texture\n", 2),
+				ft_exit(cub, 1));
+		cub->textures[i].addr = (int *)mlx_get_data_addr(cub->textures[i].img,
+				&cub->textures[i].bits_per_pixel,
+				&cub->textures[i].size_line, &cub->textures[i].endian);
+		i++;
+	}
+}
+
+void	draw_map(t_cub3d *cub)
+{
+	cub->player.last_x = 0;
+	cub->player.rotate = 0;
+	cub->window_height = cub->map_height * (TILE_SIZE * SCALE_SIZE);
+	cub->window_width = cub->map_width * (TILE_SIZE * SCALE_SIZE);
+	cub->mlx.mlx_ptr = mlx_init();
+	cub->mlx.win = mlx_new_window(cub->mlx.mlx_ptr, WINDOW_WIDTH,
+			WINDOW_HEIGTH, "Cub3D");
+	init_player(cub);
+	init_textures(cub);
+	new_main_img(cub, &cub->mini_img, 20 * TILE_SIZE * SCALE_SIZE,
+		20 * TILE_SIZE * SCALE_SIZE);
+	new_main_img(cub, &cub->map_img, WINDOW_WIDTH, WINDOW_HEIGTH);
+	mlx_hook(cub->mlx.win, 2, 1L << 0, key_pressed, cub);
+	mlx_hook(cub->mlx.win, 3, 1L << 1, key_released, cub);
 	mlx_hook(cub->mlx.win, 17, 0, exit_btn, cub);
-    mlx_loop_hook(cub->mlx.mlx_ptr, render_2dmap, cub);
+	mlx_loop_hook(cub->mlx.mlx_ptr, render_2dmap, cub);
 	mlx_loop(cub->mlx.mlx_ptr);
 }

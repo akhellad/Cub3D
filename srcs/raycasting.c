@@ -6,7 +6,7 @@
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 16:53:44 by akhellad          #+#    #+#             */
-/*   Updated: 2023/10/30 16:55:40 by akhellad         ###   ########.fr       */
+/*   Updated: 2023/10/31 10:45:37 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,6 @@ void	rays_calc(t_cub3d *cub, t_raycast *obj)
 {
 	while (!check_wall(cub, (obj->x), (obj->y)))
 	{
-		if ((obj->angel) == (cub->player.angel))
-			my_mlx_put_pixel(&cub->mini_img, floor(obj->y)
-				* SCALE_SIZE, floor(obj->x) * SCALE_SIZE, LINE_COLOR);
 		obj->y += cub->player.y_inc;
 		obj->x += cub->player.x_inc;
 	}

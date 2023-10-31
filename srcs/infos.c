@@ -6,7 +6,7 @@
 /*   By: akhellad <akhellad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 11:19:07 by akhellad          #+#    #+#             */
-/*   Updated: 2023/10/30 16:12:38 by akhellad         ###   ########.fr       */
+/*   Updated: 2023/10/31 10:44:31 by akhellad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	validate_color(char *rgb, int *color)
 	return (tab_free(split), count);
 }
 
-char	*validate_content(t_cub3d *cub ,char *content, char *id)
+char	*validate_content(t_cub3d *cub, char *content, char *id)
 {
 	int		fd;
 	char	*file;
@@ -75,7 +75,7 @@ char	*validate_id(char *id)
 	return (NULL);
 }
 
-void    parse_info(t_cub3d *cub, t_info *inf, char *file)
+void	parse_info(t_cub3d *cub, t_info *inf, char *file)
 {
 	char		*id;
 	char		*content;
