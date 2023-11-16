@@ -1,7 +1,7 @@
-EA ./textures/greystone.xpm
- NO ./textures/greystone.xpm
-        SO ./textures/greystone.xpm
-	WE ./textures/greystone.xpm
+EA ./textures/wood21700140514.xpm
+ NO ./textures/brick1700140514.xpm
+        SO ./textures/grass1700140515.xpm
+	WE ./textures/grass1700140515.xpm
 		C 0,0,167
 
 

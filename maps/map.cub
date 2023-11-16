@@ -1,11 +1,11 @@
-NO ./textures/grass.xpm
-SO ./textures/creeper.xpm
-WE ./textures/greystone.xpm
-EA ./textures/attack_torch.xpm
+NO ./textures/wood31700140137.xpm
+SO ./textures/wood_141700140138.xpm
+WE ./textures/bricksx341700139819.xpm
+EA ./textures/bricksx341700139819.xpm
 
 
-F 0,0,0
-C 255,255,255
+F 0,255,0
+C 4,100,90
 
 
 1111111111111111111111111
