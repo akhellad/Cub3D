@@ -81,7 +81,7 @@ Ensure your map file (`map.cub`) is correctly formatted according to the project
 ## Controls
 
 - `W`, `A`, `S`, `D` to move the player forward, left, backward, and right.
-- Left and right arrow keys to rotate the view.
+- Left and right arrow keys to rotate the view (or mouse in bonus).
 - `ESC` to exit the game.
 
 ## Screenshots
